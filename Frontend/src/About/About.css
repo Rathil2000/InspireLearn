@@ -1,0 +1,79 @@
+.home-grid {
+  background-color: #eee;
+  width: 100%;
+}
+.home-grid .heading {
+  text-align: center;
+  padding-left: 50%;
+  margin: 0;
+  padding-top: 2%;
+}
+
+.home-grid .box-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 24.5rem);
+  gap: 1rem;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: #eee;
+}
+
+.home-grid .box-container .box {
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  width: 50%;
+  margin-left: 40%;
+}
+
+.home-grid .box-container .box .title {
+  font-size: 2.5rem;
+  color: var(--black);
+  text-transform: capitalize;
+}
+
+.home-grid .box-container .box .flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.home-grid .box-container .flex a {
+  background-color: var(--light-bg);
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  font-size: 1.5rem;
+}
+
+.home-grid .box-container .flex a i {
+  margin-right: 1rem;
+  color: var(--black);
+}
+
+.home-grid .box-container .flex a span {
+  color: var(--light-color);
+}
+
+.home-grid .box-container .flex a:hover {
+  background-color: var(--black);
+}
+
+.home-grid .box-container .flex a:hover span {
+  color: var(--white);
+}
+
+.home-grid .box-container .flex a:hover i {
+  color: var(--white);
+}
+
+.home-grid .box-container .likes {
+  color: var(--light-color);
+  font-size: 1.7rem;
+  margin-top: 1.5rem;
+}
+
+.home-grid .box-container .likes span {
+  color: var(--main-color);
+}
+

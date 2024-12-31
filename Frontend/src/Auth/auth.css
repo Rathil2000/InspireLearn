@@ -1,0 +1,129 @@
+
+.form-container .register{
+    width:100%;
+    margin-left:20%;
+    margin-right:20%;
+  }
+  
+  .form-container .register .flex1 {
+    display:flex
+  }
+  .form-container .register .flex1 .col{
+    display: block;;
+    padding-right:10%;
+    
+  }
+  
+  .form-container{
+    min-height: calc(100vh - 20rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .form-container form{
+    display: grid;
+    background-color: var(--white);
+    border-radius: .5rem;
+    /* padding: 1rem; */
+    width: 50rem;
+  }
+  .form-container form .alignment{
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+  }
+  
+  .form-container form h3{
+    display: flex;
+    text-align: justify;
+    font-size: 1.5rem;
+    text-transform: capitalize;
+    color: var(--black);
+    padding-right: 10%;
+    padding-top: 2%;
+  }
+  
+  /* Button Group */
+  .form-container form .register-options{
+    width: 20%;
+    height: 40%;
+    display: flex;
+    justify-content: space-between; 
+    margin-top: 20px; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    /* height: 100vh;  */
+  }
+  
+  /* Button Styles */
+  .form-container form .register-options .btn {
+    display: inline-block; /* Make it an inline-block to apply width and padding */
+    width: 140px; /* Set a fixed width */
+    padding: 10px 20px 20px;/* Button padding for top/bottom and left/right */
+    background-color: #2A9D8F; /* Primary button color */
+    color: white; /* Text color */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners for a smooth look */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.2s; /* Smooth transition effects */
+    font-size: 16px; /* Font size */
+  }
+  
+  /* Hover Effects */
+  .form-container form .register-options .btn:hover {
+    background-color: #264653; /* Darker shade on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+  }
+  
+  /* Disabled Button Styles (if needed) */
+  .form-container form .register-options .btn:disabled {
+    background-color: #ccc; /* Gray color for disabled state */
+    cursor: not-allowed; /* Change cursor to indicate non-clickable */
+  }
+  
+  .form-container form p{
+    font-size: 1.5rem;
+    color: var(--light-color);
+    padding-left: 10%;
+  }
+  
+  .form-container form p span{
+    color: var(--red);
+  }
+  
+  .form-container form .box{
+    font-size: 1rem;
+    color: var(--black);
+    border-radius: .5rem;
+    background-color: var(--light-bg);
+    width: 100%;
+    margin: 1rem 0;
+  }
+  .form-container form .login-box{
+    font-size: 1rem;
+    color: var(--black);
+    border-radius: .5rem;
+    background-color: var(--light-bg);
+    width: 80%;
+    margin: 1rem 0;
+  }
+  
+  
+  
+  .btn {
+    color: white;
+    padding: 1.2%;
+    border: none;
+    border-radius: 5%;
+    text-decoration: none;
+    margin-left: 2%;
+    cursor: pointer;
+  }
+  
+  .btn{
+    background-color: #8e44ad;
+    width: 80%;
+  }

@@ -1,0 +1,339 @@
+/* Add Course Button */
+.add-course-btn {
+    width: 60%;
+    /* margin-left: 24%; */
+    background-color: #1abc9cd1; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 400px 30px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .add-course-btn:hover {
+    background-color: #1abc9c;
+  }
+  
+  /* Popup Overlay */
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Popup Content */
+  .popup-content {
+    background-color: #fff;
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: popupAnimation 0.3s ease-in-out;
+  }
+  
+  /* Close Button */
+  .popup-content .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #f44336; /* Red */
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    outline: none;
+  }
+  
+  .popup-content .close-btn:hover {
+    background-color: #d32f2f;
+  }
+  
+  /* Form Styles */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: #4caf50;
+    outline: none;
+  }
+  
+  .submit-btn {
+    background-color: #8e44ad; /* Green */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .submit-btn:hover {
+    background-color: #45a049;
+  }
+  
+  /* General table styles */
+  
+  .course-table {
+    margin: 50px auto;
+      margin-left: 24%;
+      padding: 20px;
+      width: 80%;
+      max-width: 1000px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+  }
+  .course-table  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  .image-container {
+     display: flex;              /* Enables flexbox */
+     justify-content: center;    /* Centers horizontally */
+     align-items: center;        /* Centers vertically */
+   }
+  
+  img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+  
+  }
+  .course-table th,
+  .course-table td {
+    border: 1px solid #ddd; /* Adds a border to cells */
+    padding: 10px 15px; /* Adds spacing inside cells */
+  }
+  
+  .course-table th {
+    background-color: #333; /* Light gray background for header */
+    color: #fff;/* Darker text color */
+    font-weight: bold;
+  }
+  
+  .course-table tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternating row color */
+  }
+  
+  .course-table tr:hover {
+    background-color: #f1f1f1; /* Row highlight on hover */
+  }
+  
+  /* Action buttons styles */
+  .course-table .actions {
+    display: flex;
+    justify-content: center; /* Centers the buttons within the cell */
+    gap: 10px; /* Adds spacing between buttons */
+  }
+  
+  .course-table .view-btn,
+  .course-table .update-btn,
+  .course-table .delete-btn {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  /* View button styles */
+  .course-table .view-btn {
+    background-color: #4caf50; /* Green */
+    color: white;
+  }
+  
+  .course-table .view-btn:hover {
+    background-color: #45a049;
+    transform: scale(1.05); /* Slightly enlarges button on hover */
+  }
+  
+  /* Update button styles */
+  .course-table .update-btn {
+    background-color: #ff9800; /* Orange */
+    color: white;
+  }
+  
+  .course-table .update-btn:hover {
+    background-color: #e68a00;
+    transform: scale(1.05); /* Slightly enlarges button on hover */
+  }
+  
+  /* Delete button styles */
+  .course-table .delete-btn {
+    background-color: #f44336; /* Red */
+    color: white;
+  }
+  
+  .course-table .delete-btn:hover {
+    background-color: #d32f2f;
+    transform: scale(1.05); /* Slightly enlarges button on hover */
+  }
+  
+  .view-btn,
+  .update-btn,
+  .delete-btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    margin: 5px;
+    width: 50%;
+    display: grid;
+  }
+  
+  .view-btn {
+    background-color: #007bff;
+  }
+  
+  .update-btn {
+    background-color: #ffc107;
+  }
+  
+  .delete-btn {
+    background-color: #dc3545;
+  }
+  
+  .view-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .update-btn:hover {
+    background-color: #e0a800;
+  }
+  
+  .delete-btn:hover {
+    background-color: #c82333;
+  }
+
+
+  /* Modal Overlay */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Make sure the modal is above other content */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  /* When the modal is active, make it visible */
+  .modal.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* Modal Content Box */
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 50%;
+    max-width: 800px; /* Set a maximum width for the modal */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    overflow-y: auto; /* Allow scrolling if content overflows */
+  }
+  
+  /* Close Button */
+  .modal-content .close-btn {
+    position: absolute;
+    padding: auto;
+    top: 14%;
+    right: 26%;
+    background-color: #f44336; /* Red */
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+  }
+  
+  .modal-content .close-btn:hover {
+    background-color: #d32f2f;
+  }
+  
+  /* Course Video */
+  .course-video {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    margin-top: 15px;
+  }
+  
+  /* Course Description */
+  .modal-content p {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #555;
+  }
+  
+  /* Notes Link */
+  .notes-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #0066cc;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+  }
+  
+  .notes-link:hover {
+    text-decoration: underline;
+  }
+  

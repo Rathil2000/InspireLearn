@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #f4f4f9;
+  color: #01010a;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* .grid-container {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    'sidebar header header header'
+    'sidebar main main main';
+  height: 100%;
+} */
+

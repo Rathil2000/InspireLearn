@@ -1,0 +1,196 @@
+/* Styling for the header */
+.header {
+  background-color: #fff; /* Set background color of the header */
+  padding-top: 12px; /* Add padding for proper spacing */
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Light shadow for header */
+  position: sticky;
+  top: 0; /* Stick the header to the top of the page */
+  z-index: 1000;
+}
+
+/* Flex container for header content */
+.flex {
+  display: flex;
+  justify-content: space-between; /* Align items to the left and right */
+  align-items: center; /* Vertically center-align items */
+  max-width: 1200px; /* Limit max width for larger screens */
+  margin: 0 auto; /* Center the content horizontally */
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
+
+/* Logo Styling */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  text-decoration: none; /* Remove underline from link */
+  color: #333;
+  font-family: "Poppins", sans-serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+  letter-spacing: 1px; /* Add slight spacing between letters */
+  cursor: pointer;
+
+  /* padding-left: 20%; */
+  display: inline-block;
+  position: relative;
+}
+
+.logo .learn {
+  color: #e76f51; /* Different color for "Learn" to differentiate */
+  font-weight: 500;
+}
+
+.logo:hover {
+  color: #264653; /* Color change on hover */
+  text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3); /* Slightly more shadow on hover */
+}
+
+.logo::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: #f4a261; /* Accent underline color */
+  transform: scaleX(0);
+  transition: transform 0.3s ease-in-out;
+}
+
+.logo:hover::after {
+  transform: scaleX(1); /* Animate underline when hovering */
+}
+
+/* Heading container */
+.heading {
+  display: flex; /* Flex layout for desktop */
+  justify-content: space-between; /* Distribute space evenly */
+  gap: 1.5rem; /* Add space between heading boxes */
+  flex-wrap: wrap; /* Allow wrapping */
+  width: 100%;
+}
+
+.heading-box {
+  flex: 1; /* Allow each box to take equal width */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 10px; /* Add spacing between items */
+  padding-left: 10%;
+}
+
+/* Search Form Styling */
+.search-form {
+  display: flex;
+  align-items: center; /* Vertically center the input and button */
+  width: 100%; /* Full width */
+  max-width: 400px;
+  margin: 0 auto; /* Center the form */
+}
+
+.search-form input {
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px 0 0 5px;
+  outline: none;
+  flex: 1; /* Expand input box */
+}
+
+.search-btn {
+  padding: 10px;
+  background-color: #1abc9c;
+  color: white;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.search-btn:hover {
+  background-color: #16a085;
+}
+
+/* User Buttons Styling */
+.users-btns {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Space between buttons */
+}
+
+.button {
+  padding: 4px;
+  width: 28px;
+  height: 24px;
+  background-color: #020706d8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button:hover {
+  background-color: #000000;
+}
+
+/* Responsive Design */
+
+/* Medium screens (tablets) */
+@media (max-width: 768px) {
+  .heading {
+    display: grid; /* Switch to grid layout */
+    gap: 1rem; /* Add spacing between grid items */
+  }
+
+  .search-form {
+    max-width: 100%; /* Ensure search form adjusts to available space */
+    margin: 10px 0; /* Add spacing above and below */
+  }
+
+  .users-btns {
+    justify-content: center; /* Center-align buttons */
+  }
+}
+
+/* Small screens (mobile) */
+@media (max-width: 480px) {
+  
+
+  .logo {
+    font-size: 20px; /* Adjust logo size */
+  }
+
+  .search-form input {
+    padding: 8px;
+    font-size: 12px; /* Reduce input font size */
+  }
+
+  .button {
+    width: 35px;
+    height: 35px;
+    font-size: 18px; /* Adjust button size */
+  }
+
+  .users-btns {
+    gap: 10px; /* Reduce gap between buttons */
+  }
+}
+
+@media (max-width: 768px) {
+  .search-form {
+    display: none; /* Hide the search form on mobile */
+  }
+
+  .button {
+    display: inline-block; /* Show the button on mobile */
+  }
+}
+
+@media (min-width: 768px) {
+  #bsSearch-btn {
+    display: none;
+  }
+}
