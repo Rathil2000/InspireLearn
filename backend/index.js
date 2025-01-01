@@ -25,6 +25,7 @@ const corsOptions = {
   origin: ["https://inspire-learn-frontend.vercel.app"], // Match Vite's default port
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true, 
 };
 app.use(cors(corsOptions));
 
