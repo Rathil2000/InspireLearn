@@ -35,12 +35,12 @@ router.post('/register-admin', upload.single('profileImage'), async (req, res) =
   // Get the uploaded profile image path
   const profileImagePath = req.file ? `uploads/adminProfilePic/${req.file.filename}` : null;
 
-  try {
-    // Check if the email already exists in the database
-    const existingUser = Admin.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'Email already exists. Please use another email.' });
-    }
+  // try {
+  //   // Check if the email already exists in the database
+  //   const existingUser = Admin.findOne({ email });
+  //   if (existingUser) {
+  //     return res.status(400).json({ message: 'Email already exists. Please use another email.' });
+  //   }
 
  // Hash the password using bcrypt
  const hashedPassword = bcrypt.hash(password, 10); // Salt rounds set to 10
