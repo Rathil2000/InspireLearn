@@ -22,7 +22,7 @@ app.use(express.json());
 
 // CORS Configuration
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'https://inspire-learn-frontend.vercel.app', // Match Vite's default port
+  origin: ["https://inspire-learn-frontend.vercel.app"], // Match Vite's default port
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
