@@ -59,7 +59,7 @@ app.use(contactRoutes);
 
 // MongoDB Connection
 mongoose
-  .connect(mongodb+srv://Rathil:cJe6U7k0m1qfR6AW@cluster0.fibw1dl.mongodb.net/project)
+  .connect("mongodb+srv://Rathil:cJe6U7k0m1qfR6AW@cluster0.fibw1dl.mongodb.net/project")
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => {
     console.error("Error connecting to MongoDB:", err);
