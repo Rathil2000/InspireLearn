@@ -8,11 +8,11 @@ const FavouritePlaylist = () => {
 
   const fetchPlaylists = async () => {
     try {
-      const response = await fetch("http://localhost:3001/favorite-playlist");
+      const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/favorite-playlist`);
       const data = await response.json();
       setPlaylists(data);
 
-      const courseResponse = await fetch("http://localhost:3001/courses");
+      const courseResponse = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/courses`);
       const courseData = await courseResponse.json();
       const filteredCourses = courseData.filter((course) =>
         data.some((playlist) => playlist.title === course.playlist)
@@ -35,7 +35,7 @@ const FavouritePlaylist = () => {
     if (window.confirm("Are you sure you want to delete this playlist?")) {
       try {
         const response = await fetch(
-          `http://localhost:3001/favorite-playlist/${id}`,
+          `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/favorite-playlist/${id}`,
           {
             method: "DELETE",
           }
@@ -76,7 +76,7 @@ const FavouritePlaylist = () => {
                 <td>
                   {playlist.thumbnail && (
                     <img
-                      src={`http://localhost:3001/${playlist.thumbnail}`}
+                      src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${playlist.thumbnail}`}
                       alt={playlist.title}
                       className="thumbnail"
                     />
@@ -112,7 +112,7 @@ const FavouritePlaylist = () => {
                   <td>
                     <div className="image-container">
                       <img
-                        src={`http://localhost:3001/${course.thumbnail}`}
+                        src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${course.thumbnail}`}
                         alt={course.title}
                       />
                     </div>
@@ -157,12 +157,12 @@ const FavouritePlaylist = () => {
 
             <video
               controls
-              src={`http://localhost:3001/${selectedCourse.video}`} // Backend should provide video URL
+              src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${selectedCourse.video}`} // Backend should provide video URL
               className="course-video"
             ></video>
             <p>{selectedCourse.description}</p>
             <a
-              href={`http://localhost:3001/${selectedCourse.notes}`}
+              href={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${selectedCourse.notes}`}
               target="_blank"
               rel="noopener noreferrer"
               className="notes-link"

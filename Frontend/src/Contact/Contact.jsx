@@ -16,7 +16,7 @@ function Contact() {
     setErrorMessage("");
 
     try {
-      const response = await fetch("http://localhost:3001/contact", {
+      const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/contact`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

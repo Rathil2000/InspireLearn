@@ -19,8 +19,8 @@ function Sidebar() {
 
         const apiUrl =
           role === "admin"
-            ? "http://localhost:3001/api/admin"
-            : "http://localhost:3001/api/user";
+            ? `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/admin`
+            : `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/user`;
 
         try {
           const response = await fetch(apiUrl, {
@@ -60,7 +60,7 @@ function Sidebar() {
 
       <div className="profile">
         <img
-          src={`http://localhost:3001/${user?.profileImage || image1}`} // Use profileImage or default image
+          src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${user?.profileImage || image1}`} // Use profileImage or default image
           className="image"
           alt={user?.name || "User"} // Use user's name or "User"
         />

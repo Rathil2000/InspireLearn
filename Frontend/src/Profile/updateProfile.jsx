@@ -51,8 +51,8 @@ const Update = () => {
     // Determine API endpoint based on role
     const apiUrl =
       Role.role === "admin"
-        ? "http://localhost:3001/update-adminProfile"
-        : "http://localhost:3001/update-userProfile";
+        ? `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/update-adminProfile`
+        : `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/update-userProfile`;
 
     try {
       const response = await fetch(apiUrl, {
@@ -69,8 +69,8 @@ const Update = () => {
         // Fetch latest user data
         const fetchProfileUrl =
           Role.role === "admin"
-            ? `http://localhost:3001/get-adminProfile?email=${formData.email}`
-            : `http://localhost:3001/get-userProfile?email=${formData.email}`;
+            ? `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/get-adminProfile?email=${formData.email}`
+            : `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/get-userProfile?email=${formData.email}`;
 
         const profileResponse = await fetch(fetchProfileUrl, {
           method: "GET",

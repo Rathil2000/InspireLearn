@@ -12,7 +12,7 @@ const Home = () => {
   // fetch playlists from the server
   const fetchPlaylists = async () => {
     try {
-      const response = await fetch("http://localhost:3001/playlist");
+      const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/playlist`);
       const data = await response.json();
       setPlaylists(data);
     } catch (error) {
@@ -37,7 +37,7 @@ const Home = () => {
                 <div className="playlist-thumbnail">
                   {playlist.thumbnail && (
                     <img
-                      src={`http://localhost:3001/${playlist.thumbnail}`}
+                      src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${playlist.thumbnail}`}
                       alt={playlist.title}
                       className="thumbnail"
                     />

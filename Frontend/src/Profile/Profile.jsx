@@ -13,7 +13,7 @@ const Profile = () => {
       // Get logged-in admin's email from localStorage
       const loggedInEmail = localStorage.getItem("loggedInEmail");
 
-      fetch("http://localhost:3001/api/admin", {
+      fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/admin`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +46,7 @@ const Profile = () => {
         <div className="info">
           <div className="user">
             <img
-              src={`http://localhost:3001/${user?.profileImage}`} // Use profileImage or default image
+              src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${user?.profileImage}`} // Use profileImage or default image
               className="image"
               alt={user?.name || "User"} // Use user's name or "User"
             />

@@ -15,7 +15,7 @@ export const UserProvider = ({ children}) => {
         const email = localStorage.getItem('adminEmail');
     
         if (token && email) {
-          const response = await axios.get(`http://localhost:3001/api/admin`, {
+          const response = await axios.get(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/admin`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },

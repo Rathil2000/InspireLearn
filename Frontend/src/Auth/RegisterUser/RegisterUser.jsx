@@ -57,7 +57,7 @@ function RegisterUser() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/register-user",
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/register-user`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

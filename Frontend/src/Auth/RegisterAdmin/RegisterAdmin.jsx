@@ -58,7 +58,7 @@ const RegisterAdmin = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/register-admin",
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/register-admin`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

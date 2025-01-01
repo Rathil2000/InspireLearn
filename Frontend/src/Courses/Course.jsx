@@ -4,7 +4,7 @@ import { UserContext } from "../../UserContext";
 // Assuming you have an API endpoint to fetch playlists from MongoDB
 
 const fetchPlaylists = async () => {
-  const response = await fetch("http://localhost:3001/playlist"); // API for fetching playlists
+  const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/playlist`); // API for fetching playlists
   const data = await response.json();
 
   // Create an array of key-value pairs
@@ -17,7 +17,7 @@ const fetchPlaylists = async () => {
 };
 
 const showPopupMenuAPI = async () => {
-  const response = await fetch("http://localhost:3001/playlist"); // API for popup menu data
+  const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/playlist`); // API for popup menu data
   // Check if the response status is OK (status code 200-299)
   if (!response.ok) {
     throw new Error(`Error: ${response.status} ${response.statusText}`);
@@ -62,7 +62,7 @@ const Courses = () => {
       // Get logged-in admin's email from localStorage
       const loggedInEmail = localStorage.getItem("loggedInEmail");
 
-      fetch("http://localhost:3001/api/admin", {
+      fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/admin`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -88,7 +88,7 @@ const Courses = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await fetch("http://localhost:3001/courses"); // API endpoint for courses
+      const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/courses`); // API endpoint for courses
 
       if (!response.ok) {
         throw new Error(`Error fetching courses: ${response.statusText}`);
@@ -104,7 +104,7 @@ const Courses = () => {
     if (!window.confirm("Are you sure you want to delete this course?")) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/courses/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/courses/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
@@ -163,8 +163,8 @@ const Courses = () => {
       formData.append("notes", courseData.notes);
     }
     const url = editMode
-      ? `http://localhost:3001/courses/${currentCourseId}`
-      : "http://localhost:3001/courses";
+      ? `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/courses/${currentCourseId}`
+      : `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/courses`;
     const method = editMode ? "PUT" : "POST";
 
     try {
@@ -357,7 +357,7 @@ const Courses = () => {
                 <td>
                   <div className="image-container">
                     <img
-                      src={`http://localhost:3001/${course.thumbnail}`} // Ensure backend provides thumbnail URLs
+                      src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${course.thumbnail}`} // Ensure backend provides thumbnail URLs
                       alt={course.title}
                     />
                   </div>
@@ -412,12 +412,12 @@ const Courses = () => {
 
             <video
               controls
-              src={`http://localhost:3001/${selectedCourse.video}`} // Backend should provide video URL
+              src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${selectedCourse.video}`} // Backend should provide video URL
               className="course-video"
             ></video>
             <p>{selectedCourse.description}</p>
             <a
-              href={`http://localhost:3001/${selectedCourse.notes}`}
+              href={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${selectedCourse.notes}`}
               target="_blank"
               rel="noopener noreferrer"
               className="notes-link"

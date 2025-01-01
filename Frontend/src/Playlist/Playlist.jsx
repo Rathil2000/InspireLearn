@@ -29,7 +29,7 @@ const Playlist = () => {
       // Get logged-in admin's email from localStorage
       const loggedInEmail = localStorage.getItem("loggedInEmail");
 
-      fetch("http://localhost:3001/api/admin", {
+      fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/admin`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const Playlist = () => {
 
   const fetchPlaylists = async () => {
     try {
-      const response = await fetch("http://localhost:3001/playlist");
+      const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/playlist`);
       const data = await response.json();
       setPlaylists(data);
     } catch (error) {
@@ -65,7 +65,7 @@ const Playlist = () => {
 
   const handleAddToFavorites = async (playlistId) => {
     try {
-      const response = await fetch(`http://localhost:3001/favorites`, {
+      const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/favorites`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -107,8 +107,8 @@ const Playlist = () => {
     }
 
     const url = editMode
-      ? `http://localhost:3001/playlists/${currentPlaylistId}`
-      : "http://localhost:3001/playlist";
+      ? `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/playlists/${currentPlaylistId}`
+      : `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/playlist`;
     const method = editMode ? "PUT" : "POST";
 
     try {
@@ -170,7 +170,7 @@ const Playlist = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this playlist?")) {
       try {
-        const response = await fetch(`http://localhost:3001/playlists/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/playlists/${id}`, {
           method: "DELETE",
         });
 
@@ -218,7 +218,7 @@ const Playlist = () => {
                   <td>
                     {playlist.thumbnail && (
                       <img
-                        src={`http://localhost:3001/${playlist.thumbnail}`}
+                        src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${playlist.thumbnail}`}
                         alt={playlist.title}
                         className="thumbnail"
                       />

@@ -8,7 +8,7 @@ const Users = () => {
     useEffect(() => {
       const fetchTeachers = async () => {
         try {
-          const response = await fetch('http://localhost:3001/users');
+          const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/users`);
           const data = await response.json();
           setTeachers(data);
         } catch (error) {
@@ -25,7 +25,7 @@ const Users = () => {
         // Get logged-in admin's email from localStorage
         const loggedInEmail = localStorage.getItem("loggedInEmail");
   
-        fetch("http://localhost:3001/api/admin", {
+        fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/admin`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -57,7 +57,7 @@ const Users = () => {
           {teachers.map((teacher) => (
             <div key={teacher._id} className="teacher-card">
               <img
-                src={`http://localhost:3001/${teacher.profileImage}`}
+                src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${teacher.profileImage}`}
                 alt={teacher.name}
                 className="teacher-image"
                 onError={(e) => (e.target.src = image1)} // Fallback to default image
