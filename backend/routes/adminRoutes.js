@@ -37,13 +37,13 @@ router.post('/register-admin', upload.single('profileImage'), async (req, res) =
 
   try {
     // Check if the email already exists in the database
-    const existingUser = await Admin.findOne({ email });
+    const existingUser = Admin.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already exists. Please use another email.' });
     }
 
  // Hash the password using bcrypt
- const hashedPassword = await bcrypt.hash(password, 10); // Salt rounds set to 10
+ const hashedPassword = bcrypt.hash(password, 10); // Salt rounds set to 10
     // Create a new admin object
     const newAdmin = {
       name,
@@ -55,7 +55,7 @@ router.post('/register-admin', upload.single('profileImage'), async (req, res) =
     };
 
     // Save the new admin to the database
-    const registeredAdmin = await Admin.create(newAdmin);
+    const registeredAdmin = Admin.create(newAdmin);
 
     res.status(201).json({ message: 'Admin registered successfully', admin: registeredAdmin });
   } catch (error) {
