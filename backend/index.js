@@ -16,6 +16,7 @@ const courseRoutes = require("./routes/courseRoute");
 const contactRoutes = require("./routes/contactRoute");
 const favoriteRoutes = require("./routes/favoritePlaylistRoute");
 const updateProfileRoutes = require("./routes/updateProfileRoute");
+require('dotenv').config();
 
 const app = express();
 app.use(express.json());
