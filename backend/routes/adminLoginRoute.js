@@ -31,7 +31,7 @@ router.post("/admin-login", async (req, res) => {
 
     // Generate a JWT token
     const token = jwt.sign({ email: admin.email }, process.env.JWT_SECRET, {
-      expiresIn: "60s",
+      expiresIn: "5m",
     });
 
     // AWS S3 base URL
