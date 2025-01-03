@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect} from "react";
 import { UserContext } from "../../UserContext"; // Adjusted path
 import image1 from "../Images/pic-1.jpg";
 import "./Sidebar.css";
@@ -6,7 +6,7 @@ import "./Sidebar.css";
 function Sidebar() {
   const { user, setUser } = useContext(UserContext); // Access and update user context
 
-  useEffect(() => {
+  useEffect(()=>{
     const fetchUserData = async () => {
       const storedUser = localStorage.getItem("user");
       if (storedUser) {
@@ -35,17 +35,10 @@ function Sidebar() {
           }
 
           const data = await response.json();
-          console.log(data, 222);
+          console.log(data,222);
           if (data && data.email === loggedInEmail) {
             setUser(data); // Set user in context
             localStorage.setItem("user", JSON.stringify(data)); // Cache user data
-
-            // Update profile image URL
-            const profileImageUrl = data.profileImage || image1; // Fallback to default image
-            setUser((prevUser) => ({
-              ...prevUser,
-              profileImage: profileImageUrl,
-            }));
           } else {
             console.error("User not found or email mismatch!");
           }
@@ -70,10 +63,8 @@ function Sidebar() {
           className="image"
           alt={user?.name || "User"} // Use user's name or "User"
         />
-        <h3 className="name">{user?.name || "Guest"}</h3>{" "}
-        {/* User's name or fallback */}
-        <p className="role">{user?.profession || "User Role"}</p>{" "}
-        {/* Profession */}
+        <h3 className="name">{user?.name || "Guest"}</h3> {/* User's name or fallback */}
+        <p className="role">{user?.profession || "User Role"}</p> {/* Profession */}
         <button
           className="btn"
           onClick={() => (window.location.href = "/profile")} // Navigate to profile

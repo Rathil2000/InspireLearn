@@ -31,14 +31,8 @@ router.post("/admin-login", async (req, res) => {
 
     // Generate a JWT token
     const token = jwt.sign({ email: admin.email }, process.env.JWT_SECRET, {
-      expiresIn: "5m",
+      expiresIn: "15m",
     });
-
-    // AWS S3 base URL
-    const AWS_S3_BASE_URL = process.env.AWS_S3_BASE_URL;
-
-     // Ensure profileImage URL is properly formatted
-     const profileImageUrl = admin.profileImage ? `${AWS_S3_BASE_URL}/${admin.profileImage}` : null;
 
     // Send back the admin's name, profession, profileImage, role, and token
     return res.status(200).json({
@@ -46,7 +40,7 @@ router.post("/admin-login", async (req, res) => {
       token,
       name: admin.name, // Assuming 'name' is a field in your admin model
       profession: admin.profession, // Assuming 'profession' is a field in your admin model
-      profileImage: profileImageUrl,
+      profileImage: admin.profileImage,
       role: admin.role,
     });
   } catch (error) {
