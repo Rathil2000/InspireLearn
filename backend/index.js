@@ -55,7 +55,7 @@ async function init() {
 init();
 // CORS Configuration
 const corsOptions = {
-  origin: ["https://inspire-learn-frontend.vercel.app"], // Match Vite's default port
+  origin: ["https://inspire-learn-frontend.vercel.app","https://inspire-learn-frontend-l12pxz3ec-rathil2000s-projects.vercel.app"], // Match Vite's default port
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
