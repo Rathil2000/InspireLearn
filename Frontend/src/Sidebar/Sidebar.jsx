@@ -9,7 +9,7 @@ function Sidebar() {
   useEffect(()=>{
     const fetchUserData = async () => {
       const storedUser = localStorage.getItem("user");
-        console.log(storedUser.profileImage,222);
+        console.log(storedUser,111222);
       if (storedUser) {
         setUser(JSON.parse(storedUser)); // Use existing user data
       } else {
