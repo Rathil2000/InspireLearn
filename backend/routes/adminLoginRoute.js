@@ -43,7 +43,7 @@ router.post("/admin-login", async (req, res) => {
       token,
       name: admin.name, // Assuming 'name' is a field in your admin model
       profession: admin.profession, // Assuming 'profession' is a field in your admin model
-      profileImage: `${AWS_S3_BASE_URL}/${admin.profileImage}`,
+      profileImage: admin.profileImage,
       role: admin.role,
     });
   } catch (error) {
