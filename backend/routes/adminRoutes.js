@@ -5,6 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const router = express.Router();
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const authenticateToken = require("../middleware/authMiddleware");
 // Ensure the uploads/userProfilePic directory exists
 const uploadDir = path.join(__dirname, '../uploads/adminProfilePic');
@@ -12,50 +13,65 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Multer storage configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // Specify the folder for admin profile pictures
-    const adminProfilePicFolder = path.join(__dirname, '../uploads/adminProfilePic/');
-    cb(null, adminProfilePicFolder);
-  },
-  filename: (req, file, cb) => {
-    // Generate a unique filename for each uploaded image
-    cb(null, `${Date.now()}-${file.originalname}`);
+// AWS S3 Configuration
+const s3Client = new S3Client({
+  region: 'eu-north-1',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
 });
 
-// Initialize multer
+// Multer Configuration (for temporary file storage before uploading to S3)
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Register Admin
 router.post('/register-admin', upload.single('profileImage'), async (req, res) => {
   const { name, profession, email, password } = req.body;
-  role="admin";
-  // Get the uploaded profile image path
-  const profileImagePath = req.file ? `uploads/adminProfilePic/${req.file.filename}` : null;
+  const role = 'admin';
 
   try {
     // Check if the email already exists in the database
-    const existingUser = Admin.findOne({ email });
+    const existingUser = await Admin.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already exists. Please use another email.' });
     }
 
- // Hash the password using bcrypt
- const hashedPassword = bcrypt.hash(password, 10); // Salt rounds set to 10
+    let profileImagePath = null;
+
+    // Upload the profile image to S3 if provided
+    if (req.file) {
+      const fileName = `${Date.now()}-${req.file.originalname}`;
+      const uploadParams = {
+        Bucket: 'inspirelearn-files-upload',
+        Key: `uploads/adminProfilePic/${fileName}`,
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype,
+      };
+
+      // Upload to S3
+      await s3Client.send(new PutObjectCommand(uploadParams));
+
+      // Set the S3 file path
+      profileImagePath = `https://inspirelearn-files-upload.s3.eu-north-1.amazonaws.com/uploads/adminProfilePic/${fileName}`;
+    }
+
+    // Hash the password using bcrypt
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Create a new admin object
-    const newAdmin = {
+    const newAdmin = new Admin({
       name,
       role,
       profession,
       email,
-      password:hashedPassword,
-      profileImage: profileImagePath, // Store the relative image path
-    };
+      password: hashedPassword,
+      profileImage: profileImagePath, // Store the S3 URL of the image
+    });
 
     // Save the new admin to the database
-    const registeredAdmin = Admin.create(newAdmin);
+    const registeredAdmin = await newAdmin.save();
 
     res.status(201).json({ message: 'Admin registered successfully', admin: registeredAdmin });
   } catch (error) {
