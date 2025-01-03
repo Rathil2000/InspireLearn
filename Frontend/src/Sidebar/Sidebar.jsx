@@ -36,7 +36,7 @@ function Sidebar() {
           }
 
           const data = await response.json();
-          console.log("data")
+          console.log(data,222);
           if (data && data.email === loggedInEmail) {
             setUser(data); // Set user in context
             localStorage.setItem("user", JSON.stringify(data)); // Cache user data
