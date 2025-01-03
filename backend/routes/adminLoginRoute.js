@@ -34,9 +34,6 @@ router.post("/admin-login", async (req, res) => {
       expiresIn: "1h",
     });
 
-    // AWS S3 base URL
-    const AWS_S3_BASE_URL = process.env.AWS_S3_BASE_URL;
-
     // Send back the admin's name, profession, profileImage, role, and token
     return res.status(200).json({
       message: "Login successful",
