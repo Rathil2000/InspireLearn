@@ -5,7 +5,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const router = express.Router();
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand,GetObjectCommand  } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const authenticateToken = require("../middleware/authMiddleware");
 // Ensure the uploads/userProfilePic directory exists
 const uploadDir = path.join(__dirname, '../uploads/adminProfilePic');
@@ -21,6 +22,21 @@ const s3Client = new S3Client({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
 });
+
+// Function to generate a signed URL for accessing objects
+async function getObjectURL(key) {
+  try {
+    const command = new GetObjectCommand({
+      Bucket: 'inspirelearn-files-upload',
+      Key: key,
+    });
+    const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // URL expires in 1 hour
+    return url;
+  } catch (error) {
+    console.error('Error generating signed URL:', error.message);
+    throw error;
+  }
+}
 
 // Multer Configuration (for temporary file storage before uploading to S3)
 const storage = multer.memoryStorage();
@@ -53,8 +69,8 @@ router.post('/register-admin', upload.single('profileImage'), async (req, res) =
       // Upload to S3
       await s3Client.send(new PutObjectCommand(uploadParams));
 
-      // Set the S3 file path
-      profileImagePath = `https://inspirelearn-files-upload.s3.eu-north-1.amazonaws.com/uploads/adminProfilePic/${fileName}`;
+     // Generate a signed URL for accessing the uploaded image
+     profileImagePath = await getObjectURL(`uploads/adminProfilePic/${fileName}`);
     }
 
     // Hash the password using bcrypt
