@@ -46,7 +46,7 @@ const Profile = () => {
         <div className="info">
           <div className="user">
             <img
-              src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${user?.profileImage}`} // Use profileImage or default image
+              src={user?.profileImage || user?.name} // Use profileImage or default image
               className="image"
               alt={user?.name || "User"} // Use user's name or "User"
             />

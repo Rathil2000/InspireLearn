@@ -9,7 +9,6 @@ function Sidebar() {
   useEffect(()=>{
     const fetchUserData = async () => {
       const storedUser = localStorage.getItem("user");
-        console.log(storedUser,111222);
       if (storedUser) {
         setUser(JSON.parse(storedUser)); // Use existing user data
       } else {
@@ -60,7 +59,7 @@ function Sidebar() {
 
       <div className="profile">
         <img
-          src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${user?.profileImage || image1}`} // Use profileImage or default image
+          src={user?.profileImage || image1} // Use profileImage or default image
           className="image"
           alt={user?.name || "User"} // Use user's name or "User"
         />
