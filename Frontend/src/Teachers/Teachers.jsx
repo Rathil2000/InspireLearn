@@ -11,7 +11,6 @@ const Teachers = () => {
         try {
           const response = await fetch(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/teachers`);
           const data = await response.json();
-          console.log(data,11122)
           setTeachers(data);
         } catch (error) {
           console.error('Error fetching teachers:', error);
@@ -63,7 +62,7 @@ const Teachers = () => {
           {teachers.map((teacher) => (
             <div key={teacher._id} className="teacher-card">
                <img
-                src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${teacher.profileImage}`}
+                src={teacher.profileImage}
                 alt={teacher.name}
                 className="teacher-image"
                 onError={(e) => (e.target.src = image1)} // Fallback to default image
