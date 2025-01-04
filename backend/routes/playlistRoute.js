@@ -1,32 +1,37 @@
 const express = require("express");
+const { s3Client, getObjectURL, upload } = require("../utils/awsS3Utils"); // Import utilities
+const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const multer = require("multer");
 const path = require("path");
 const Playlist = require("../models/playlist");
 const app = express();
 const router = express.Router();
 const Favorite = require("../models/favorite");
-// Multer configuration for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Folder where files will be saved
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const fileName = uniqueSuffix + path.extname(file.originalname); // Add unique suffix to filename
 
-    cb(null, fileName);
-  },
-});
-const upload = multer({ storage: storage });
-
-app.use("/uploads", express.static("uploads"));
+// AWS S3 bucket name
+const BUCKET_NAME = "inspirelearn-files-upload";
 
 // Route: Create a new playlist
 router.post("/playlist", upload.single("thumbnail"), async (req, res) => {
   try {
     const { status, title, description } = req.body;
-    const thumbnail = req.file ? req.file.path : null;
+    const thumbnail = null;
 
+    if (req.file) {
+      const fileName = `${Date.now()}-${req.file.originalname}`;
+      const uploadParams = {
+        Bucket: BUCKET_NAME,
+        Key: `uploads/playlistThumbnails/${fileName}`,
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype,
+      };
+
+      await s3Client.send(new PutObjectCommand(uploadParams));
+      thumbnail = await getObjectURL(
+        BUCKET_NAME,
+        `uploads/playlistThumbnails/${fileName}`
+      );
+    }
     const newPlaylist = new Playlist({ status, title, description, thumbnail });
     await newPlaylist.save();
 
@@ -41,11 +46,9 @@ router.post("/playlist", upload.single("thumbnail"), async (req, res) => {
 router.get("/playlist", async (req, res) => {
   try {
     const playlists = await Playlist.find();
- 
+
     // Using map to access thumbnails
-    playlists.map((playlist) => {
-     
-    });
+    playlists.map((playlist) => {});
     res.status(200).json(playlists);
   } catch (error) {
     console.error(error);

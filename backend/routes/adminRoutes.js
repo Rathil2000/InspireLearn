@@ -5,7 +5,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const router = express.Router();
-const { S3Client, PutObjectCommand,GetObjectCommand  } = require('@aws-sdk/client-s3');
+const { s3Client, getObjectURL, upload } = require('../utils/awsS3Utils');
+const { PutObjectCommand  } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const authenticateToken = require("../middleware/authMiddleware");
 // Ensure the uploads/userProfilePic directory exists
@@ -14,33 +15,6 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// AWS S3 Configuration
-const s3Client = new S3Client({
-  region: 'eu-north-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
-
-// Function to generate a signed URL for accessing objects
-async function getObjectURL(key) {
-  try {
-    const command = new GetObjectCommand({
-      Bucket: 'inspirelearn-files-upload',
-      Key: key,
-    });
-    const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // URL expires in 1 hour
-    return url;
-  } catch (error) {
-    console.error('Error generating signed URL:', error.message);
-    throw error;
-  }
-}
-
-// Multer Configuration (for temporary file storage before uploading to S3)
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
 
 // Register Admin
 router.post('/register-admin', upload.single('profileImage'), async (req, res) => {
