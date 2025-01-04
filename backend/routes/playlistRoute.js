@@ -27,10 +27,7 @@ router.post("/playlist", upload.single("thumbnail"), async (req, res) => {
       };
 
       await s3Client.send(new PutObjectCommand(uploadParams));
-      thumbnail = await getObjectURL(
-        BUCKET_NAME,
-        `uploads/playlistThumbnails/${fileName}`
-      );
+      thumbnail = await getObjectURL(`uploads/playlistThumbnails/${fileName}`);
     }
     const newPlaylist = new Playlist({ status, title, description, thumbnail });
     await newPlaylist.save();
