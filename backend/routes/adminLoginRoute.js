@@ -30,14 +30,14 @@ router.post("/admin-login", async (req, res) => {
     }
 
     // Generate a JWT token
-    const token = jwt.sign({ email: admin.email }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    // const token = jwt.sign({ email: admin.email }, process.env.JWT_SECRET, {
+    //   expiresIn: "1h",
+    // });
 
     // Send back the admin's name, profession, profileImage, role, and token
     return res.status(200).json({
       message: "Login successful",
-      token,
+      // token,
       name: admin.name, // Assuming 'name' is a field in your admin model
       profession: admin.profession, // Assuming 'profession' is a field in your admin model
       profileImage: admin.profileImage,
