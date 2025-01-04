@@ -3,8 +3,8 @@ const Admin = require("../models/admin");
 const path = require("path");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs"); // Import bcrypt for password comparison
-const authenticateToken = require("../middleware/authMiddleware"); // Adjust the path to where the middleware is located
+const bcrypt = require("bcryptjs"); 
+const authenticateToken = require("../middleware/authMiddleware"); 
 require("dotenv").config(); // Load environment variables
 // Log request headers for all incoming requests
 router.use((req, res, next) => {
