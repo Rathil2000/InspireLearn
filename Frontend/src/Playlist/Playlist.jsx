@@ -218,7 +218,7 @@ const Playlist = () => {
                   <td>
                     {playlist.thumbnail && (
                       <img
-                        src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${playlist.thumbnail}`}
+                        src={playlist.thumbnail}
                         alt={playlist.title}
                         className="thumbnail"
                       />
