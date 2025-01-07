@@ -58,33 +58,34 @@ router.put("/playlists/:id", upload.single("thumbnail"), async (req, res) => {
   const { id } = req.params;
   const { status, title, description } = req.body;
   try {
-    try {
-      // Update playlist logic
-      const updateData = { status, title, description };
-      if (req.file) {
-        updateData.thumbnail = req.file.path; // Update thumbnail if provided
-      }
+    const updateData = { status, title, description };
+    if (req.file) {
+      const fileName = `${Date.now()}-${req.file.originalname}`;
+      const uploadParams = {
+        Bucket: BUCKET_NAME,
+        Key: `uploads/playlistThumbnails/${fileName}`,
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype,
+      };
 
-      const updatedPlaylist = await Playlist.findByIdAndUpdate(id, updateData, {
-        new: true,
-      });
-      if (!updatedPlaylist) {
-        return res.status(404).json({ message: "Playlist not found" });
-      }
-
-      res.status(200).json({
-        message: "Playlist updated successfully",
-        playlist: updatedPlaylist,
-      });
-    } catch (error) {
-      console.error("Error updating playlist:", error);
-      res.status(500).json({ message: "Internal server error" });
+      await s3Client.send(new PutObjectCommand(uploadParams));
+      updateData.thumbnail = await getObjectURL(`uploads/playlistThumbnails/${fileName}`);
     }
+
+    const updatedPlaylist = await Playlist.findByIdAndUpdate(id, updateData, { new: true });
+    if (!updatedPlaylist) {
+      return res.status(404).json({ message: "Playlist not found" });
+    }
+
+    res.status(200).json({
+      message: "Playlist updated successfully",
+      playlist: updatedPlaylist,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error updating playlist", error });
+    console.error("Error updating playlist:", error);
+    res.status(500).json({ message: "Error updating playlist." });
   }
 });
-
 // Delete a playlist
 router.delete("/playlists/:id", async (req, res) => {
   try {
