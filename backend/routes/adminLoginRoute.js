@@ -14,9 +14,7 @@ router.use((req, res, next) => {
 });
 
 router.post("/admin-login", async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://inspire-learn-frontend.vercel.app');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  console.log("Incoming Request:", req.body);
   const { email, password } = req.body;
 
   try {
@@ -28,7 +26,7 @@ router.post("/admin-login", async (req, res) => {
     }
 
     // Compare the provided password with the hashed password in the database
-    const isPasswordValid =  bcrypt.compare(password, admin.password);
+    const isPasswordValid =  await bcrypt.compare(password, admin.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
