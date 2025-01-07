@@ -18,16 +18,23 @@ router.post("/playlist", upload.single("thumbnail"), async (req, res) => {
     const thumbnail = null;
 
     if (req.file) {
-      const fileName = `${Date.now()}-${req.file.originalname}`;
-      const uploadParams = {
-        Bucket: BUCKET_NAME,
-        Key: `uploads/playlistThumbnails/${fileName}`,
-        Body: req.file.buffer,
-        ContentType: req.file.mimetype,
-      };
+      try {
+        const fileName = `${Date.now()}-${req.file.originalname}`;
+        const uploadParams = {
+          Bucket: BUCKET_NAME,
+          Key: `uploads/playlistThumbnails/${fileName}`,
+          Body: req.file.buffer,
+          ContentType: req.file.mimetype,
+        };
 
-      await s3Client.send(new PutObjectCommand(uploadParams));
-      thumbnail = await getObjectURL(`uploads/playlistThumbnails/${fileName}`);
+        await s3Client.send(new PutObjectCommand(uploadParams));
+        thumbnail = await getObjectURL(
+          `uploads/playlistThumbnails/${fileName}`
+        );
+      } catch (error) {
+        console.error("Error uploading thumbnail:", error);
+        return res.status(500).json({ error: "Failed to upload thumbnail." });
+      }
     }
     const newPlaylist = new Playlist({ status, title, description, thumbnail });
     await newPlaylist.save();
@@ -69,10 +76,14 @@ router.put("/playlists/:id", upload.single("thumbnail"), async (req, res) => {
       };
 
       await s3Client.send(new PutObjectCommand(uploadParams));
-      updateData.thumbnail = await getObjectURL(`uploads/playlistThumbnails/${fileName}`);
+      updateData.thumbnail = await getObjectURL(
+        `uploads/playlistThumbnails/${fileName}`
+      );
     }
 
-    const updatedPlaylist = await Playlist.findByIdAndUpdate(id, updateData, { new: true });
+    const updatedPlaylist = await Playlist.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
     if (!updatedPlaylist) {
       return res.status(404).json({ message: "Playlist not found" });
     }
