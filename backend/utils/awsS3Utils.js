@@ -12,10 +12,10 @@ const s3Client = new S3Client({
 });
 
 // Function to generate a signed URL for accessing objects
-async function getObjectURL(bucketName, key) {
+async function getObjectURL(key) {
   try {
     const command = new GetObjectCommand({
-      Bucket: bucketName,
+      Bucket: 'inspirelearn-files-upload',
       Key: key,
     });
     const url = await getSignedUrl(s3Client, command); // URL expires in 1 hour

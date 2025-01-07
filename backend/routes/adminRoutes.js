@@ -1,14 +1,11 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const Admin = require('../models/admin');
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const router = express.Router();
 const { s3Client, getObjectURL, upload } = require('../utils/awsS3Utils');
 const { PutObjectCommand  } = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
-const authenticateToken = require("../middleware/authMiddleware");
 // Ensure the uploads/userProfilePic directory exists
 const uploadDir = path.join(__dirname, '../uploads/adminProfilePic');
 if (!fs.existsSync(uploadDir)) {
