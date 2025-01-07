@@ -19,15 +19,19 @@ router.post("/playlist", upload.single("thumbnail"), async (req, res) => {
     const thumbnail = null;
 
     if (req.file) {
-      try {
-        const fileName = `${Date.now()}-${req.file.originalname}`;
-        const uploadParams = {
-          Bucket: BUCKET_NAME,
-          Key: `uploads/playlistThumbnails/${fileName}`,
-          Body: req.file.buffer,
-          ContentType: req.file.mimetype,
-        };
+      // Log the uploaded file
+      console.log("Received file:", req.file);
+      const fileName = `${Date.now()}-${req.file.originalname}`;
+      const uploadParams = {
+        Bucket: BUCKET_NAME,
+        Key: `uploads/playlistThumbnails/${fileName}`,
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype,
+      };
+      // Log upload parameters
+      console.log("Uploading to S3 with params:", uploadParams);
 
+      try {
         await s3Client.send(new PutObjectCommand(uploadParams));
         thumbnail = await getObjectURL(
           `uploads/playlistThumbnails/${fileName}`
