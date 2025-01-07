@@ -127,6 +127,7 @@ const Playlist = () => {
         return;
       }
       const result = await response.json(); // Parse the response
+      console.log(result,1122);
       if (response.ok) {
         if (result.message === "Playlist added successfully") {
           alert("Playlist added successfully!");
