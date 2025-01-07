@@ -18,7 +18,7 @@ async function getObjectURL(bucketName, key) {
       Bucket: bucketName,
       Key: key,
     });
-    const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // URL expires in 1 hour
+    const url = await getSignedUrl(s3Client, command); // URL expires in 1 hour
     return url;
   } catch (error) {
     console.error('Error generating signed URL:', error.message);
