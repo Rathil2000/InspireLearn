@@ -4,8 +4,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const multer = require("multer");
 const path = require("path");
-require("dotenv").config();
-
 // Importing routes
 const userRoutes = require("./routes/userRoutes");
 const userLoginRoute = require("./routes/userLoginRoute");
@@ -17,8 +15,12 @@ const courseRoutes = require("./routes/courseRoute");
 const contactRoutes = require("./routes/contactRoute");
 const favoriteRoutes = require("./routes/favoritePlaylistRoute");
 const updateProfileRoutes = require("./routes/updateProfileRoute");
+require("dotenv").config();
 
-// AWS S3 Configuration
+const app = express();
+app.use(express.json());
+
+// aws s3
 const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const s3Client = new S3Client({
@@ -42,7 +44,6 @@ async function getObjectURL(key) {
   }
 }
 
-// Initialize and test AWS S3 connection
 async function init() {
   try {
     const url = await getObjectURL("uploads/adminProfilePic/image-1735922929483.jpeg");
@@ -52,25 +53,14 @@ async function init() {
   }
 }
 init();
-
-// Initialize Express App
-const app = express();
-app.use(express.json());
-
 // CORS Configuration
 const corsOptions = {
-  origin: [
-    "https://inspire-learn-frontend.vercel.app",
-    "https://inspire-learn-frontend-l12pxz3ec-rathil2000s-projects.vercel.app",
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  origin: ["https://inspire-learn-frontend.vercel.app","https://inspire-learn-frontend-l12pxz3ec-rathil2000s-projects.vercel.app"], // Match Vite's default port
+  methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
 app.use(cors(corsOptions));
-
-// Handle Preflight Requests
-app.options("*", cors(corsOptions));
 
 // Middleware
 app.use(bodyParser.json());
@@ -87,13 +77,6 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// Debug Middleware to Log Requests
-app.use((req, res, next) => {
-  console.log(`Incoming request: ${req.method} ${req.url}`);
-  console.log("Headers:", req.headers);
-  next();
-});
-
 // Routes
 app.use("/", userRoutes);
 app.use("/", userLoginRoute);
@@ -108,7 +91,9 @@ app.use(contactRoutes);
 
 // MongoDB Connection
 mongoose
-  .connect("mongodb+srv://Rathil:cJe6U7k0m1qfR6AW@cluster0.fibw1dl.mongodb.net/project")
+  .connect(
+    "mongodb+srv://Rathil:cJe6U7k0m1qfR6AW@cluster0.fibw1dl.mongodb.net/project"
+  )
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => {
     console.error("Error connecting to MongoDB:", err);
@@ -120,9 +105,8 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Server error", error: err.message });
 });
-
+port = process.env.PORT;
 // Start Server
-const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
