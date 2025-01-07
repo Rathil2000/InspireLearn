@@ -14,6 +14,9 @@ router.use((req, res, next) => {
 });
 
 router.post("/admin-login", async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://inspire-learn-frontend.vercel.app');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   const { email, password } = req.body;
 
   try {
