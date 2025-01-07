@@ -32,13 +32,14 @@ router.post("/playlist", upload.single("thumbnail"), async (req, res) => {
       console.log("Uploading to S3 with params:", uploadParams);
 
       try {
-        await s3Client.send(new PutObjectCommand(uploadParams));
+        const s3Response=await s3Client.send(new PutObjectCommand(uploadParams));
+        console.log("S3 Response:", s3Response);
         thumbnail = await getObjectURL(
           `uploads/playlistThumbnails/${fileName}`
         );
       } catch (error) {
         console.error("Error uploading thumbnail:", error);
-        return res.status(500).json({ error: "Failed to upload thumbnail." });
+        return res.status(500).json({ error: `Failed to upload thumbnail. ${error.message}`});
       }
     }
     const newPlaylist = new Playlist({ status, title, description, thumbnail });
