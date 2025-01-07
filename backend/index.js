@@ -18,8 +18,10 @@ const updateProfileRoutes = require("./routes/updateProfileRoute");
 require("dotenv").config();
 
 const app = express();
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Increase the limit for JSON bodies and form data
+app.use(bodyParser.json({ limit: '50mb' })); // For JSON requests
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // For form data
 
 // aws s3
 const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
@@ -54,20 +56,23 @@ async function init() {
   }
 }
 init();
+
 // CORS Configuration
 const corsOptions = {
-  origin: ["https://inspire-learn-frontend.vercel.app","https://inspire-learn-frontend-l12pxz3ec-rathil2000s-projects.vercel.app"], // Match Vite's default port
+  origin: [
+    "https://inspire-learn-frontend.vercel.app", 
+    "https://inspire-learn-frontend-l12pxz3ec-rathil2000s-projects.vercel.app"
+  ], // Add multiple frontend URLs
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
 app.use(cors(corsOptions));
 
-// Middleware
-app.use(bodyParser.json());
+// Middleware for static file serving (uploads folder)
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Multer Configuration
+// Multer Configuration for file uploads with file size limit
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/");
@@ -76,7 +81,10 @@ const storage = multer.diskStorage({
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB file size limit
+});
 
 // Routes
 app.use("/", userRoutes);
@@ -106,8 +114,9 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Server error", error: err.message });
 });
-port = process.env.PORT;
+
 // Start Server
+const port = process.env.PORT || 5000; // Ensure a fallback port
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
