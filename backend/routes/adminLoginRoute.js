@@ -14,15 +14,17 @@ router.use((req, res, next) => {
 });
 
 router.post("/admin-login", async (req, res) => {
-  console.log("Incoming Request:", req.body);
   const { email, password } = req.body;
 
   try {
     // Find admin by email
     const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
 
     // Compare the provided password with the hashed password in the database
-    const isPasswordValid =  await bcrypt.compare(password, admin.password);
+    const isPasswordValid =  bcrypt.compare(password, admin.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid email or password" });
     }

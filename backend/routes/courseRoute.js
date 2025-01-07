@@ -1,19 +1,38 @@
 const express = require("express");
 const multer = require("multer");
-const { s3Client, getObjectURL, upload } = require("../utils/awsS3Utils"); // Import AWS utilities
-const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const Course = require("../models/course");
 const fs = require("fs");
 const path = require("path");
 const router = express.Router();
-
-// AWS S3 bucket name
-const BUCKET_NAME = "inspirelearn-files-upload";
+const mongoose = require("mongoose");
+// Function to create folders if they don't exist
+const createFolderIfNotExists = (folderPath) => {
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath, { recursive: true });
+  }
+};
 
 // Multer setup for video, thumbnail, and notes upload
-const storage = multer.memoryStorage(); // Using memoryStorage to handle files directly in memory
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const folder =
+      file.fieldname === "video"
+        ? "videos"
+        : file.fieldname === "notes"
+        ? "notes"
+        : "thumbnails";
+    cb(null, `./uploads/${folder}`);
+  },
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+});
 const upload = multer({ storage });
-
+// Ensure the directories exist before handling file uploads
+const videoFolder = path.join(__dirname, "..", "uploads", "videos");
+const thumbnailFolder = path.join(__dirname, "..", "uploads", "thumbnails");
+const notesFolder = path.join(__dirname, "..", "uploads", "notes");
+createFolderIfNotExists(videoFolder);
+createFolderIfNotExists(thumbnailFolder);
+createFolderIfNotExists(notesFolder);
 // Add a course
 router.post(
   "/courses",
@@ -25,65 +44,25 @@ router.post(
   async (req, res) => {
     try {
       const { title, description, status, playlist } = req.body;
-
-      let thumbnailURL = null;
-      let videoURL = null;
-      let notesURL = null;
-
-      if (req.files.thumbnail) {
-        const fileName = `${Date.now()}-${req.files.thumbnail[0].originalname}`;
-        const uploadParams = {
-          Bucket: BUCKET_NAME,
-          Key: `uploads/courseThumbnails/${fileName}`,
-          Body: req.files.thumbnail[0].buffer,
-          ContentType: req.files.thumbnail[0].mimetype,
-        };
-
-        const s3Response = await s3Client.send(new PutObjectCommand(uploadParams));
-        thumbnailURL = await getObjectURL(`uploads/courseThumbnails/${fileName}`);
-      }
-
-      if (req.files.video) {
-        const fileName = `${Date.now()}-${req.files.video[0].originalname}`;
-        const uploadParams = {
-          Bucket: BUCKET_NAME,
-          Key: `uploads/courseVideos/${fileName}`,
-          Body: req.files.video[0].buffer,
-          ContentType: req.files.video[0].mimetype,
-        };
-
-        const s3Response = await s3Client.send(new PutObjectCommand(uploadParams));
-        videoURL = await getObjectURL(`uploads/courseVideos/${fileName}`);
-      }
-
-      if (req.files.notes) {
-        const fileName = `${Date.now()}-${req.files.notes[0].originalname}`;
-        const uploadParams = {
-          Bucket: BUCKET_NAME,
-          Key: `uploads/courseNotes/${fileName}`,
-          Body: req.files.notes[0].buffer,
-          ContentType: req.files.notes[0].mimetype,
-        };
-
-        const s3Response = await s3Client.send(new PutObjectCommand(uploadParams));
-        notesURL = await getObjectURL(`uploads/courseNotes/${fileName}`);
-      }
-
+     
+    
       const course = new Course({
         title,
         description,
         status,
         playlist,
-        thumbnail: thumbnailURL,
-        video: videoURL,
-        notes: notesURL,
+        thumbnail: req.files.thumbnail ? req.files.thumbnail[0].path : null,
+        video: req.files.video ? req.files.video[0].path : null,
+        notes: req.files.notes ? req.files.notes[0].path : null,
       });
 
       await course.save();
       res.status(201).json({ message: "Course added successfully", course });
     } catch (error) {
-      console.error("Error while saving course:", error);
-      res.status(500).json({ message: "Error adding course", error: error.message });
+      console.error("Error while saving course:", error); // Log error details
+      res
+        .status(500)
+        .json({ message: "Error adding course", error: error.message });
     }
   }
 );
@@ -91,7 +70,7 @@ router.post(
 // Fetch Courses API
 router.get("/courses", async (req, res) => {
   try {
-    const courses = await Course.find().sort({ createdAt: -1 });
+    const courses = await Course.find().sort({ createdAt: -1 }); // Fetch all courses, sorted by creation date
     res.status(200).json(courses);
   } catch (err) {
     console.error("Error fetching courses:", err);
@@ -99,16 +78,10 @@ router.get("/courses", async (req, res) => {
   }
 });
 
-// Get a single course by ID
-router.get("/courses/:id", async (req, res) => {
-  try {
-    const course = await Course.findById(req.params.id);
-    if (!course) return res.status(404).send("Course not found");
-    res.json(course);
-  } catch (error) {
-    console.error("Error fetching course:", error);
-    res.status(500).json({ message: "Error fetching course" });
-  }
+router.get('/courses/:id', async (req, res) => {
+  const course = await Course.findById(req.params.id);
+  if (!course) return res.status(404).send('Course not found');
+  res.json(course);
 });
 
 // Update a course by ID
@@ -133,42 +106,17 @@ router.put(
 
       // Add files if they are uploaded
       if (req.files.thumbnail) {
-        const fileName = `${Date.now()}-${req.files.thumbnail[0].originalname}`;
-        const uploadParams = {
-          Bucket: BUCKET_NAME,
-          Key: `uploads/courseThumbnails/${fileName}`,
-          Body: req.files.thumbnail[0].buffer,
-          ContentType: req.files.thumbnail[0].mimetype,
-        };
-        await s3Client.send(new PutObjectCommand(uploadParams));
-        updateData.thumbnail = await getObjectURL(`uploads/courseThumbnails/${fileName}`);
+        updateData.thumbnail = req.files.thumbnail[0].path;
       }
-
       if (req.files.video) {
-        const fileName = `${Date.now()}-${req.files.video[0].originalname}`;
-        const uploadParams = {
-          Bucket: BUCKET_NAME,
-          Key: `uploads/courseVideos/${fileName}`,
-          Body: req.files.video[0].buffer,
-          ContentType: req.files.video[0].mimetype,
-        };
-        await s3Client.send(new PutObjectCommand(uploadParams));
-        updateData.video = await getObjectURL(`uploads/courseVideos/${fileName}`);
+        updateData.video = req.files.video[0].path;
       }
-
       if (req.files.notes) {
-        const fileName = `${Date.now()}-${req.files.notes[0].originalname}`;
-        const uploadParams = {
-          Bucket: BUCKET_NAME,
-          Key: `uploads/courseNotes/${fileName}`,
-          Body: req.files.notes[0].buffer,
-          ContentType: req.files.notes[0].mimetype,
-        };
-        await s3Client.send(new PutObjectCommand(uploadParams));
-        updateData.notes = await getObjectURL(`uploads/courseNotes/${fileName}`);
+        updateData.notes = req.files.notes[0].path;
       }
 
       const updatedCourse = await Course.findByIdAndUpdate(courseId, updateData, { new: true });
+
       if (!updatedCourse) {
         return res.status(404).json({ message: "Course not found" });
       }
@@ -191,6 +139,11 @@ router.delete("/courses/:id", async (req, res) => {
       return res.status(404).json({ message: "Course not found" });
     }
 
+    // Optionally delete files from the file system
+    if (course.thumbnail) fs.unlinkSync(course.thumbnail);
+    if (course.video) fs.unlinkSync(course.video);
+    if (course.notes) fs.unlinkSync(course.notes);
+
     res.status(200).json({ message: "Course deleted successfully" });
   } catch (error) {
     console.error("Error while deleting course:", error);
@@ -203,6 +156,7 @@ router.get('/search', async (req, res) => {
   const { query } = req.query;
 
   try {
+    // Perform a case-insensitive search on title and description
     const courses = await Course.find({
       $or: [
         { title: { $regex: query, $options: 'i' } },
@@ -215,5 +169,6 @@ router.get('/search', async (req, res) => {
     res.status(500).json({ message: 'An error occurred while searching for courses.' });
   }
 });
+
 
 module.exports = router;
