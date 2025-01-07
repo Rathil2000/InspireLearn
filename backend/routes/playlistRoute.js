@@ -15,6 +15,7 @@ const BUCKET_NAME = "inspirelearn-files-upload";
 router.post("/playlist", upload.single("thumbnail"), async (req, res) => {
   try {
     const { status, title, description } = req.body;
+    console.log("Received data:", req.body); // Log received data
     const thumbnail = null;
 
     if (req.file) {
