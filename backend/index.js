@@ -20,8 +20,9 @@ require("dotenv").config();
 const app = express();
 
 // Increase the limit for JSON bodies and form data
-app.use(bodyParser.json({ limit: '50mb' })); // For JSON requests
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // For form data
+
+app.use(express.json({ limit: '50mb' })); // Increase limit for JSON payload
+app.use(express.urlencoded({ limit: '50mb', extended: true })); 
 
 // aws s3
 const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
