@@ -21,8 +21,9 @@ router.post(
   ]),
   async (req, res) => {
     try {
+      console.log('Request received:', req.body);
       const { title, description, status, playlist } = req.body;
-
+ 
       let thumbnailURL = null;
       let videoURL = null;
       let notesURL = null;
