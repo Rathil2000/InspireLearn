@@ -60,10 +60,7 @@ init();
 
 // CORS Configuration
 const corsOptions = {
-  origin: [
-    "https://inspire-learn-frontend.vercel.app", 
-    "https://inspire-learn-frontend-l12pxz3ec-rathil2000s-projects.vercel.app"
-  ], // Add multiple frontend URLs
+  origin: "https://inspire-learn-frontend.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
