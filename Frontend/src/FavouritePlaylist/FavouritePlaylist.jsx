@@ -76,7 +76,7 @@ const FavouritePlaylist = () => {
                 <td>
                   {playlist.thumbnail && (
                     <img
-                      src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${playlist.thumbnail}`}
+                      src={playlist.thumbnail}
                       alt={playlist.title}
                       className="thumbnail"
                     />
@@ -112,7 +112,7 @@ const FavouritePlaylist = () => {
                   <td>
                     <div className="image-container">
                       <img
-                        src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${course.thumbnail}`}
+                        src={course.thumbnail}
                         alt={course.title}
                       />
                     </div>
@@ -157,12 +157,12 @@ const FavouritePlaylist = () => {
 
             <video
               controls
-              src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${selectedCourse.video}`} // Backend should provide video URL
+              src={selectedCourse.video} // Backend should provide video URL
               className="course-video"
             ></video>
             <p>{selectedCourse.description}</p>
             <a
-              href={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${selectedCourse.notes}`}
+              href={selectedCourse.notes}
               target="_blank"
               rel="noopener noreferrer"
               className="notes-link"
