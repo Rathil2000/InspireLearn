@@ -357,7 +357,7 @@ const Courses = () => {
                 <td>
                   <div className="image-container">
                     <img
-                      src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${course.thumbnail}`} // Ensure backend provides thumbnail URLs
+                      src={course.thumbnail} // Ensure backend provides thumbnail URLs
                       alt={course.title}
                     />
                   </div>
@@ -412,12 +412,12 @@ const Courses = () => {
 
             <video
               controls
-              src={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${selectedCourse.video}`} // Backend should provide video URL
+              src={selectedCourse.video} // Backend should provide video URL
               className="course-video"
             ></video>
             <p>{selectedCourse.description}</p>
             <a
-              href={`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/${selectedCourse.notes}`}
+              href={selectedCourse.notes}
               target="_blank"
               rel="noopener noreferrer"
               className="notes-link"
