@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
-const { CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand ,upload } = require("../utils/awsS3Utils"); // Import AWS utilities
-const {S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const {  upload } = require("../utils/awsS3Utils"); // Import AWS utilities
+const {S3Client, PutObjectCommand ,CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand} = require("@aws-sdk/client-s3");
 const Course = require("../models/course");
 const fs = require("fs");
 const path = require("path");
