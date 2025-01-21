@@ -1,59 +1,75 @@
 const express = require("express");
 const multer = require("multer");
-const {  upload } = require("../utils/awsS3Utils"); // Import AWS utilities
+const {  upload } = require("../utils/awsS3Utils"); 
 const {S3Client, PutObjectCommand ,CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand} = require("@aws-sdk/client-s3");
 const Course = require("../models/course");
-const fs = require("fs");
-const path = require("path");
 const router = express.Router();
 
 // AWS S3 bucket name
 const BUCKET_NAME = "inspirelearn-files-upload";
 
 const REGION = 'eu-north-1'; // Replace with your AWS region
-const s3Client = new S3Client({ region: REGION });
+const s3Client = new S3Client({
+  region: 'eu-north-1',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
 
 const multipartUpload = async (bucket, key, file) => {
-  const createMultipartUploadParams = {
-    Bucket: bucket,
-    Key: key,
-  };
+  try {
+    console.log("Region:", REGION);
+    console.log("Bucket:", bucket);
+    console.log("Key:", key);
 
-  // Start multipart upload
-  const createResponse = await s3Client.send(new CreateMultipartUploadCommand(createMultipartUploadParams));
-  const uploadId = createResponse.UploadId;
-
-  const chunkSize = 5 * 1024 * 1024; // 5 MB chunks
-  const chunks = Math.ceil(file.length / chunkSize);
-  const parts = [];
-
-  for (let i = 0; i < chunks; i++) {
-    const start = i * chunkSize;
-    const end = Math.min(start + chunkSize, file.length);
-
-    const uploadPartParams = {
+    const createMultipartUploadParams = {
       Bucket: bucket,
       Key: key,
-      PartNumber: i + 1,
-      UploadId: uploadId,
-      Body: file.slice(start, end),
     };
 
-    const partResponse = await s3Client.send(new UploadPartCommand(uploadPartParams));
-    parts.push({ ETag: partResponse.ETag, PartNumber: i + 1 });
+    // Start multipart upload
+    const createResponse = await s3Client.send(new CreateMultipartUploadCommand(createMultipartUploadParams));
+    const uploadId = createResponse.UploadId;
+    console.log("UploadId:", uploadId);
+
+    const chunkSize = 5 * 1024 * 1024; // 5 MB chunks
+    const chunks = Math.ceil(file.length / chunkSize);
+    const parts = [];
+
+    for (let i = 0; i < chunks; i++) {
+      const start = i * chunkSize;
+      const end = Math.min(start + chunkSize, file.length);
+
+      const uploadPartParams = {
+        Bucket: bucket,
+        Key: key,
+        PartNumber: i + 1,
+        UploadId: uploadId,
+        Body: file.slice(start, end),
+      };
+
+      const partResponse = await s3Client.send(new UploadPartCommand(uploadPartParams));
+      parts.push({ ETag: partResponse.ETag, PartNumber: i + 1 });
+    }
+
+    // Complete multipart upload
+    const completeMultipartUploadParams = {
+      Bucket: bucket,
+      Key: key,
+      UploadId: uploadId,
+      MultipartUpload: { Parts: parts },
+    };
+
+    const completeResponse = await s3Client.send(new CompleteMultipartUploadCommand(completeMultipartUploadParams));
+    console.log("Upload completed successfully!");
+    return `https://${bucket}.s3.${REGION}.amazonaws.com/${key}`;
+  } catch (error) {
+    console.error("Error generating S3 URL:", error);
+    throw error;
   }
-
-  // Complete multipart upload
-  const completeMultipartUploadParams = {
-    Bucket: bucket,
-    Key: key,
-    UploadId: uploadId,
-    MultipartUpload: { Parts: parts },
-  };
-
-  await s3Client.send(new CompleteMultipartUploadCommand(completeMultipartUploadParams));
-  return `https://${bucket}.s3.${REGION}.amazonaws.com/${key}`;
 };
+
 
 // Add a course
 router.post(
