@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
-const { s3Client, getObjectURL, upload } = require("../utils/awsS3Utils"); // Import AWS utilities
-const { PutObjectCommand } = require("@aws-sdk/client-s3");
+const { CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand ,upload } = require("../utils/awsS3Utils"); // Import AWS utilities
+const {S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const Course = require("../models/course");
 const fs = require("fs");
 const path = require("path");
@@ -10,6 +10,50 @@ const router = express.Router();
 // AWS S3 bucket name
 const BUCKET_NAME = "inspirelearn-files-upload";
 
+const REGION = 'eu-north-1'; // Replace with your AWS region
+const s3Client = new S3Client({ region: REGION });
+
+const multipartUpload = async (bucket, key, file) => {
+  const createMultipartUploadParams = {
+    Bucket: bucket,
+    Key: key,
+  };
+
+  // Start multipart upload
+  const createResponse = await s3Client.send(new CreateMultipartUploadCommand(createMultipartUploadParams));
+  const uploadId = createResponse.UploadId;
+
+  const chunkSize = 5 * 1024 * 1024; // 5 MB chunks
+  const chunks = Math.ceil(file.length / chunkSize);
+  const parts = [];
+
+  for (let i = 0; i < chunks; i++) {
+    const start = i * chunkSize;
+    const end = Math.min(start + chunkSize, file.length);
+
+    const uploadPartParams = {
+      Bucket: bucket,
+      Key: key,
+      PartNumber: i + 1,
+      UploadId: uploadId,
+      Body: file.slice(start, end),
+    };
+
+    const partResponse = await s3Client.send(new UploadPartCommand(uploadPartParams));
+    parts.push({ ETag: partResponse.ETag, PartNumber: i + 1 });
+  }
+
+  // Complete multipart upload
+  const completeMultipartUploadParams = {
+    Bucket: bucket,
+    Key: key,
+    UploadId: uploadId,
+    MultipartUpload: { Parts: parts },
+  };
+
+  await s3Client.send(new CompleteMultipartUploadCommand(completeMultipartUploadParams));
+  return `https://${bucket}.s3.${REGION}.amazonaws.com/${key}`;
+};
 
 // Add a course
 router.post(
@@ -21,50 +65,29 @@ router.post(
   ]),
   async (req, res) => {
     try {
-      console.log('Request received:', req.body);
+      console.log("Request received:", req.body);
       const { title, description, status, playlist } = req.body;
- 
+
       let thumbnailURL = null;
       let videoURL = null;
       let notesURL = null;
 
       if (req.files.thumbnail) {
         const fileName = `${Date.now()}-${req.files.thumbnail[0].originalname}`;
-        const uploadParams = {
-          Bucket: BUCKET_NAME,
-          Key: `uploads/courseThumbnails/${fileName}`,
-          Body: req.files.thumbnail[0].buffer,
-          ContentType: req.files.thumbnail[0].mimetype,
-        };
-
-        const s3Response = await s3Client.send(new PutObjectCommand(uploadParams));
-        thumbnailURL = await getObjectURL(`uploads/courseThumbnails/${fileName}`);
+        const key = `uploads/courseThumbnails/${fileName}`;
+        thumbnailURL = await multipartUpload(BUCKET_NAME, key, req.files.thumbnail[0].buffer);
       }
 
       if (req.files.video) {
         const fileName = `${Date.now()}-${req.files.video[0].originalname}`;
-        const uploadParams = {
-          Bucket: BUCKET_NAME,
-          Key: `uploads/courseVideos/${fileName}`,
-          Body: req.files.video[0].buffer,
-          ContentType: req.files.video[0].mimetype,
-        };
-
-        const s3Response = await s3Client.send(new PutObjectCommand(uploadParams));
-        videoURL = await getObjectURL(`uploads/courseVideos/${fileName}`);
+        const key = `uploads/courseVideos/${fileName}`;
+        videoURL = await multipartUpload(BUCKET_NAME, key, req.files.video[0].buffer);
       }
 
       if (req.files.notes) {
         const fileName = `${Date.now()}-${req.files.notes[0].originalname}`;
-        const uploadParams = {
-          Bucket: BUCKET_NAME,
-          Key: `uploads/courseNotes/${fileName}`,
-          Body: req.files.notes[0].buffer,
-          ContentType: req.files.notes[0].mimetype,
-        };
-
-        const s3Response = await s3Client.send(new PutObjectCommand(uploadParams));
-        notesURL = await getObjectURL(`uploads/courseNotes/${fileName}`);
+        const key = `uploads/courseNotes/${fileName}`;
+        notesURL = await multipartUpload(BUCKET_NAME, key, req.files.notes[0].buffer);
       }
 
       const course = new Course({
