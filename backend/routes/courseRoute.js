@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-const {  upload } = require("../utils/awsS3Utils"); 
+const {  getObjectURL,upload } = require("../utils/awsS3Utils"); 
 const {S3Client, PutObjectCommand ,CreateMultipartUploadCommand, UploadPartCommand, CompleteMultipartUploadCommand} = require("@aws-sdk/client-s3");
 const Course = require("../models/course");
 const router = express.Router();
