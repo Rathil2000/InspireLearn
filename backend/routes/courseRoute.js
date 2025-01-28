@@ -33,7 +33,7 @@ const multipartUpload = async (bucket, key, file) => {
     const uploadId = createResponse.UploadId;
     console.log("UploadId:", uploadId);
 
-    const chunkSize = 5 * 1024 * 1024; // 5 MB chunks
+    const chunkSize = 50 * 1024 * 1024; // 50 MB chunks
     const chunks = Math.ceil(file.length / chunkSize);
     const parts = [];
 
